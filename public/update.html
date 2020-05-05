@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <img class="imgLogo" src="images/hctlogo.JPG" alt="HCT Logo" height="100">
+    <br>
+    <title>Add Student</title>
+</head>
+
+<body>
+
+    <h1 align="center">Update a Student</h1>
+    <br>
+    <!-- Mneu -->
+    <table style="width:70%" class="tableMenu" align="center">
+        <tr>
+        <th>Home Page</th>
+        <th>(using POST)</th>
+        <th>(using PUT)</th>
+        <th>(using DELETE)</th>
+        <th>View Students Data</th>
+    </tr>
+    <tr>
+      <td > <a href="index.html">Home</a> </td>
+      <td> <a href="add.html">Add a new student</a> </td>
+      <td> <a href="update.html">Update a student</a> </td>
+      <td> <a href="delete.html">Delete a student</a></td>
+      <td> <a href="report.html">Data Report</a></td>
+        </tr>
+    
+    </table>
+
+    <br>
+    <br>
+    <br>
+
+    <!-- End Mneu -->
+
+    <div class="container">
+        <div class="contants">
+
+            <!-- working area -->
+
+            <br>
+            <br>
+            <!-- END Title -->
+            <p align="center">Note: load data using Student ID</p> <br>
+            <!-- FORM -->
+            <form id="updateStudentForm" action="http://localhost:7979/?_method=PUT" method="POST">
+              <table style="width:50%" align="center">
+                <tr> <th> Enter Student ID:</th> <td> <input type="text" name="StudentID"> </td> </tr>
+                <tr> <th>Enter Student Name:</th> <td> <input type="text" name="StudentName"> </td> </tr>
+                <tr> <th>Enter Gender:</th> <td> <input type="text" name="Gender"> </td> </tr>          
+                <tr> <th>Enter Program:</th> <td> <input type="text" name="Program"> </td> </tr>
+                <tr> <th>Enter Acadmic year:</th> <td> <input type="text" name="Acadmicyear"> </td> </tr>
+                <tr> <th>Enter Age:</th> <td> <input type="text" name="Age"> </td> </tr>
+                <tr> <th>Enter CGPA:</th> <td> <input type="text" name="CGPA"> </td> </tr>
+                <tr> <th><input type="button" value="Load Student Data" onclick="loadData()"/> </th> <td> <input type="submit" value="Update The Student" /> </td> </tr>
+               </table>
+              <br>
+            </form>
+
+            <!-- END FORM -->
+
+
+            <!-- JavaScript -->
+            <script>
+                function handleResponse() {
+                    console.log(this.responseText);
+            
+                    let updateForm = document.getElementById("updateStudentForm");
+            
+                    //convert responseText to a JS object
+                    let jsonArray = JSON.parse(this.responseText);
+            
+                    if (jsonArray.length == 0) {
+                      alert("No data found for item " + updateForm.elements["StudentID"].value);
+                      return;
+                    }
+                    
+                    //get the references to the textboxes and display 
+                    //the data from server inside them.
+
+                    let studentName = updateForm.elements["StudentName"];
+                    studentName.value = jsonArray[0].StudentName;
+
+                    let gender = updateForm.elements["Gender"];
+                    gender.value = jsonArray[0].Gender;
+
+                    let program = updateForm.elements["Program"];
+                    program.value = jsonArray[0].Program;
+
+                    let acadmicyear = updateForm.elements["Acadmicyear"];
+                    acadmicyear.value = jsonArray[0].Acadmicyear;
+                    
+                    let age = updateForm.elements["Age"];
+                    age.value = jsonArray[0].Age;
+                    
+                    let cGPA = updateForm.elements["CGPA"];
+                    cGPA.value = jsonArray[0].CGPA;
+
+
+                }
+            
+                //load the item data from server 
+                function loadData() {
+                    let updateForm = document.getElementById("updateStudentForm");
+                    let studentID = updateForm.elements["StudentID"].value;
+                    studentID = parseInt(studentID);
+            
+                    let httpRequest = new XMLHttpRequest();
+                    httpRequest.addEventListener("load", handleResponse);
+                    httpRequest.open("GET", "http://localhost:7979/studentID/"+studentID);
+                    httpRequest.send();
+                }
+              </script>
+
+
+            <!-- END JavaScript -->
+
+
+            <!-- End working area -->
+
+        </div>
+
+    </div>
+</body>
+<br>
+<footer>
+    <h5>Student Grading System (SGS) @2020 by Group A  </h5>
+</footer>
+</html>

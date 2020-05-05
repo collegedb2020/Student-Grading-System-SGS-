@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <img class="imgLogo" src="images/hctlogo.JPG" alt="HCT Logo" height="100">
+    <br>
+    <title>Student Grading System</title>
+</head>
+
+<body>
+
+    <h1 align="center">View Students Data</h1>
+    <br>
+
+
+    <!-- Mneu -->
+    <table style="width:70%" class="tableMenu" align="center">
+        <tr>
+            <th>Home Page</th>
+            <th>(using POST)</th>
+            <th>(using PUT)</th>
+            <th>(using DELETE)</th>
+            <th>View Students Data</th>
+        </tr>
+        <tr>
+            <td> <a href="index.html">Home</a> </td>
+            <td> <a href="add.html">Add a new student</a> </td>
+            <td> <a href="update.html">Update a student</a> </td>
+            <td> <a href="delete.html">Delete a student</a></td>
+            <td> <a href="report.html">Data Report</a></td>
+        </tr>
+
+    </table>
+
+    <br>
+    <br>
+    <br>
+
+    <!-- End Mneu -->
+
+    <div class="container">
+        <div class="contants">
+
+            <!-- working area -->
+            <h2 align="center"> Information </h2>
+
+
+
+
+            <!-- Table Find -->
+            
+                <table style="width:50%" align="center">
+                    <tr>
+                        <th> Show All Students Data</th>
+                        <td> </td>
+                        <td><input type="button" id="btnFindAll" value="Find All Students" onclick="loadData('btnFindAll')" /> </td>
+                    </tr>
+                    <tr>
+                        <th> Enter Student ID:</th>
+                        <td> <input type="text" id="txtStudentID" name="StudentID"> </td>
+                        <td><input type="button" id="btnFindID" value="Find by Student ID" onclick="loadData('btnFindID')" /> </td>
+                    </tr>
+                    <tr>
+                        <th>Enter Student Name:</th>
+                        <td> <input type="text"  id="txtStudentName" name="StudentName"> </td>
+                        <td><input type="button" id="btnFindStudentName" value="Find by Student Name" onclick="loadData('btnFindStudentName')" /> </td>
+                    </tr>
+                    <tr>
+                        <th>Enter Gender:</th>
+                        <td> <input type="text"  id="txtGender" name="Gender"> </td>
+                        <td><input type="button" id="btnFindGender" value="Find by Gender" onclick="loadData('btnFindGender')" /> </td>
+                    </tr>
+                    <tr>
+                        <th>Enter Program:</th>
+                        <td> <input type="text"  id="txtProgram" name="Program" > </td>
+                        <td><input type="button" id="btnFindProgram" value="Find by Program" onclick="loadData('btnFindProgram')" /> </td>
+                    </tr>
+                    <tr>
+                        <th>Enter Acadmic year:</th>
+                        <td> <input type="text" id="txtAcadmicyear" name="Acadmicyear"> </td>
+                        <td><input type="button" id="btnFindAcadmicyear" value="Find by Acadmic year" onclick="loadData('btnFindAcadmicyear')" /> </td>
+                    </tr>
+                    <tr>
+                        <th>Enter Age:</th>
+                        <td> <input type="text" id="txtAge" name="Age"> </td>
+                        <td><input type="button" id="btnFindAge" value="Find by Age" onclick="loadData('btnFindAge')" /> </td>
+                    </tr>
+                    <tr>
+                        <th>Enter CGPA:</th>
+                        <td> <input type="text" id="txtCGPA" name="CGPA"> </td>
+                        <td><input type="button" id="btnFindCGPA" value="Find by CGPA" onclick="loadData('btnFindCGPA')" /> </td>
+                    </tr>
+                    
+                </table>
+                <br>
+         
+
+            <!-- END Table Fine -->
+
+
+            <br>
+            <br>
+            <br>
+            <!-- View Records -->
+            <div align="center">
+                <div id="itemsCount"> </div>
+                <div id="itemsDiv"></div>
+            </div>
+            <!-- End working area -->
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+
+    <script>
+        
+        function handleResponse() {
+            console.log(this.responseText);
+
+            let itemsDiv = document.getElementById("itemsDiv");
+
+            //convert responseText to a JS object
+            let jsonArray = JSON.parse(this.responseText);
+
+            let itemsCount = document.getElementById("itemsCount");
+
+            //Show total values
+            itemsCount.innerHTML = "We have found " + jsonArray.length + " items!";
+            document.createElement("table");
+            let counter = 1;
+            for (let tblstudents of jsonArray) {
+
+                let p = document.createElement("p");
+
+                let itemString = counter + "- "
+                    + " StudentID: " + tblstudents.StudentID
+                    + ", StudentName: " + tblstudents.StudentName
+                    + ", Gender: " + tblstudents.Gender
+                    + ", Program: " + tblstudents.Program
+                    + ", Acadmic year: " + tblstudents.Acadmicyear
+                    + ", Age: " + tblstudents.Age
+                    + ", CGPA: " + tblstudents.CGPA.toFixed(2);
+
+
+
+
+                let pText = document.createTextNode(itemString);
+                p.appendChild(pText);
+
+                //add the p to the itemsDiv
+                itemsDiv.appendChild(p);
+                counter++
+            }
+        }
+
+
+
+        let httpRequest = new XMLHttpRequest();
+        httpRequest.addEventListener("load", handleResponse);
+        
+        function loadData(findby) 
+        {
+            //alert(findby)
+
+            
+            //Clean
+            itemsDiv.innerHTML = "";
+            itemsCount.innerHTML = "";
+            var value;
+            
+            if(findby =="btnFindAll" )
+            {
+                //clean
+                txtStudentID.value = "";
+                txtStudentName.value = "";
+                txtGender.value = "";
+                txtProgram.valueL = "";
+                txtAcadmicyear.value = "";
+                txtAge.value = "";
+                txtCGPA.value = "";
+
+                httpRequest.open("GET", "http://localhost:7979/");
+                httpRequest.send();
+            }
+            else if(findby =="btnFindID" )
+            {
+                //clean
+                //txtStudentID.value = "";
+                txtStudentName.value = "";
+                txtGender.value = "";
+                txtProgram.valueL = "";
+                txtAcadmicyear.value = "";
+                txtAge.value = "";
+                txtCGPA.value = "";
+
+                value = document.getElementById("txtStudentID").value;
+                value = parseInt(value);
+                httpRequest.open("GET", "http://localhost:7979/StudentID/" + value); 
+                httpRequest.send();
+            }
+           
+            else if(findby == "btnFindStudentName") 
+            {
+
+                //clean
+                txtStudentID.value = "";
+                //txtStudentName.value = "";
+                txtGender.value = "";
+                txtProgram.valueL = "";
+                txtAcadmicyear.value = "";
+                txtAge.value = "";
+                txtCGPA.value = "";
+                value = document.getElementById("txtStudentName").value;
+              
+                httpRequest.open("GET", "http://localhost:7979/StudentName/" + value); 
+                httpRequest.send();
+            }
+            else if(findby =="btnFindGender")
+            {
+                //clean
+                txtStudentID.value = "";
+                txtStudentName.value = "";
+                //txtGender.value = "";
+                txtProgram.value= "";
+                txtAcadmicyear.value= "";
+                txtAge.value = "";
+                txtCGPA.value = "";
+
+
+                value = document.getElementById("txtGender").value;
+                httpRequest.open("GET", "http://localhost:7979/Gender/" + value); 
+                httpRequest.send();
+            }
+            else if (findby=="btnFindProgram")
+            {
+
+                //clean
+                txtStudentID.value = "";
+                txtStudentName.value = "";
+                txtGender.value = "";
+                //txtProgram.value = "";
+                txtAcadmicyear.value = "";
+                txtAge.value = "";
+                txtCGPA.value = "";
+
+                value = document.getElementById("txtProgram").value;
+                httpRequest.open("GET", "http://localhost:7979/byProgram/" + value);  
+                httpRequest.send();
+            }
+            else if (findby=="btnFindAcadmicyear")
+            {
+                
+                //clean
+                txtStudentID.value = "";
+                txtStudentName.value = "";
+                txtGender.value = "";
+                txtProgram.value = "";
+                //txtAcadmicyear.value = "";
+                txtAge.value = "";
+                txtCGPA.value = "";
+
+                value = document.getElementById("txtAcadmicyear").value;
+                value = parseInt(value);
+                //alert(value)
+                httpRequest.open("GET", "http://localhost:7979/Acadmicyear/" + value); 
+                httpRequest.send();
+            }
+            else if (findby=="btnFindAge")
+            {
+                 //clean
+                txtStudentID.value = "";
+                txtStudentName.value = "";
+                txtGender.value = "";
+                txtProgram.value = "";
+                txtAcadmicyear.value = "";
+                //txtAge.value = "";
+                txtCGPA.value = "";
+
+                value = document.getElementById("txtAge").value;
+                value = parseInt(value);
+                httpRequest.open("GET", "http://localhost:7979/Age/" + value); 
+                httpRequest.send();
+            }
+            else if (findby=="btnFindCGPA")
+            {
+
+                 //clean
+                txtStudentID.value = "";
+                txtStudentName.value = "";
+                txtGender.value = "";
+                txtProgram.value = "";
+                txtAcadmicyear.value = "";
+                txtAge.value = "";
+                //txtCGPA.value = "";
+
+                value = document.getElementById("txtCGPA").value;
+                value = parseFloat(value);
+                httpRequest.open("GET", "http://localhost:7979/CGPA/" + value);  
+                httpRequest.send();
+            }
+            else
+            {
+                //alert("Not Found!")
+            }
+ 
+            httpRequest.send();
+        }
+
+      
+
+        //let httpRequest = new XMLHttpRequest();
+        //httpRequest.addEventListener("load", handleResponse);
+        //httpRequest.open("GET", "http://localhost:7979/micros");// will run micros 
+        //httpRequest.open("GET", "http://localhost:7979" + route);//all items default route index.html
+        httpRequest.open("GET", "http://localhost:7979/");
+        //httpRequest.open("GET", "http://localhost:7979/");//all items default route index.html
+        httpRequest.send();
+    </script>
+
+    <!-- End JavaScript -->
+
+
+
+
+</body>
+<br>
+<footer>
+    <h5>Student Grading System (SGS) @2020 by Group A  </h5>
+</footer>
+
+</html>
